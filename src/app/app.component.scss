@@ -1,0 +1,11 @@
+.content {
+  max-width: 300px;
+  outline: 1px solid red;
+  margin: 0 auto;
+}
+
+::ng-deep {
+  *[hidden] {
+    display: none !important;
+  }
+}

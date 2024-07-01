@@ -1,0 +1,38 @@
+<div class="tree-node">
+  @if (hasChildren) {
+    <div class="tree-node__title-row">
+      <div class="tree-node__opener" [ngClass]="{ 'tree-node__opener_open': open }" (click)="toggleOpen()"></div>
+      <label class="tree-node__label">
+        <input
+          class="tree-node__checkbox"
+          type="checkbox" 
+          [disabled]="item.disabled"
+          (change)="onChange($event)"
+          [checked]="item.checked"
+          [indeterminate]="item.indeterminate"
+        />
+        {{item.name}}
+      </label>
+    </div>
+    <div class="tree-node__children" [hidden]="!open">
+      @for (child of item.children; track child.id) {
+        <app-tree-node
+          [item]="child"
+          [checked]="!!item.checked"
+          (nodeCheckedChange)="onChildCheckChange($event)"
+          (nodeCheckedOnInit)="onChildCheckChange($event, true)"
+        ></app-tree-node>
+      }
+    </div>
+  }
+
+  @else {
+    <div class="tree-node__title-row__without-children">
+      <label class="tree-node__label">
+        <input class="tree-node__checkbox" type="checkbox" [disabled]="item.disabled" (change)="onChange($event)" [checked]="item.checked"  />
+        {{item.name}}
+      </label>
+    </div>
+  }
+
+</div>
