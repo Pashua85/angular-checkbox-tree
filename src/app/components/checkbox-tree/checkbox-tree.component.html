@@ -1,7 +1,5 @@
 <div class="checkbox-tree">
-  <form>
-    @for (item of items; track item.id) {
-      <app-tree-node [item]="item"></app-tree-node>
-    }
-  </form>
+  @for (item of tree; track item.id) {
+    <app-tree-node [item]="item"></app-tree-node>
+  }
 </div>

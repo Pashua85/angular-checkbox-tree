@@ -6,9 +6,9 @@
         <input
           class="tree-node__checkbox"
           type="checkbox" 
-          [disabled]="item.disabled"
           (change)="onChange($event)"
           [checked]="item.checked"
+          [disabled]="item.disabled"
           [indeterminate]="item.indeterminate"
         />
         {{item.name}}

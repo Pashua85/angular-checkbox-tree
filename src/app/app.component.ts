@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CheckboxTreeComponent } from './components/checkbox-tree/checkbox-tree.component';
 import { TreeNode } from './interfaces/tree-node';
+import { TreeStructureItem } from './interfaces/tree-structure-item';
 
 
 
-const treeNodes: TreeNode[] = [
+const treeNodes: TreeStructureItem[] = [
   {
     name: 'branch1',
     id: 'branch1',
@@ -34,7 +35,7 @@ const treeNodes: TreeNode[] = [
             name: 'branch1-2-2',
             id: 'branch1-2-2',
             checked: false,
-            disabled: false
+            disabled: true,
           },
         ]
       },
