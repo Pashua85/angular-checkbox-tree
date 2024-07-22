@@ -1,5 +1,5 @@
 <div class="checkbox-tree">
   @for (item of tree; track item.id) {
-    <app-tree-node [item]="item"></app-tree-node>
+    <app-tree-node [item]="item" [checked]="!!item.checked" [indeterminate]="!!item.indeterminate" (nodeCheckedChange)="onNodeCheckedChange()"></app-tree-node>
   }
 </div>

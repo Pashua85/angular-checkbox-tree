@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { CheckboxTreeComponent } from './components/checkbox-tree/checkbox-tree.component';
 import { TreeNode } from './interfaces/tree-node';
 import { TreeStructureItem } from './interfaces/tree-structure-item';
+import { TreeLeafsValues } from './types/tree-leafs-values';
 
 
 
@@ -42,7 +43,7 @@ const treeNodes: TreeStructureItem[] = [
       {
         name: 'branch1-3',
         id: 'branch1-3',
-        checked: false,
+        checked: true,
         disabled: false
       }
     ]
@@ -121,4 +122,10 @@ const treeNodes: TreeStructureItem[] = [
 })
 export class AppComponent {
   public treeNodes = treeNodes;
+
+  public selectedLeafsIds: string[]= ['branch1-3', 'branch2-1-1-1']
+
+  public onLeafsChange(event: TreeLeafsValues) {
+    this.selectedLeafsIds = Object.keys(event).filter(key => event[key]);
+  }
 }

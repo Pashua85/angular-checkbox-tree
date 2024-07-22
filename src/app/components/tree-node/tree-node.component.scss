@@ -1,8 +1,51 @@
 .tree-node {
+  &__title-row__without-children,
+  &__title-row {
+    padding: 2px 0;
+  }
+
   &__children {
     display: flex;
     flex-direction: column;
     padding-left: 20px;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    &_disabled {
+      color: grey;
+    }
+  }
+
+  &__icon {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1px solid black;
+    position: relative;
+
+    &_checked::before {
+      content: '✓';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 2px;
+    }
+
+    &_indeterminate:not(.tree-node__icon_checked)::before {
+      content: '-';
+      display: block;
+      position: absolute;
+      bottom: 0;
+      left: 3px;
+    }
+
+    &_disabled {
+      border-color: grey !important;
+    }
   }
 
   &__title-row {

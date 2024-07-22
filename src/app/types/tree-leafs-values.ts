@@ -1,0 +1,1 @@
+export type TreeLeafsValues = Record<string, boolean>;
