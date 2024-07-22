@@ -17,6 +17,9 @@ export class CheckboxTreeComponent implements OnInit {
   @Input()
   public items!: TreeStructureItem[];
 
+  @Input()
+  public pure = false;
+
   @Output()
   public treeLeafsValuesChange = new EventEmitter<TreeLeafsValues>();
 
@@ -24,9 +27,8 @@ export class CheckboxTreeComponent implements OnInit {
 
   private treeNodeMap: Record<string, TreeNode> = {};
 
-
   ngOnInit(): void {
-    this.initTree(this.items, []);
+    this.initTree(this.pure ? this.cloneItems(this.items) : this.items, []);
     this.tree = this.items as TreeNode[];
   }
 
@@ -36,6 +38,10 @@ export class CheckboxTreeComponent implements OnInit {
     this.getLeafValues(this.tree, treeLeafCheckedMap);
 
     this.treeLeafsValuesChange.emit(treeLeafCheckedMap);
+  }
+
+  private cloneItems(items: TreeStructureItem[]): TreeStructureItem[] {
+    return JSON.parse(JSON.stringify(items));
   }
 
   private getLeafValues (tree: TreeStructureItem[], map: Record<string, boolean>) {
