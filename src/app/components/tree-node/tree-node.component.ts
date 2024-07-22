@@ -20,13 +20,11 @@ export class TreeNodeComponent implements OnInit {
   @Input()
   public checked: boolean = false;
 
+  @Input()
+  public indeterminate: boolean = false;
+
   @Output()
   public nodeCheckedChange = new EventEmitter<boolean>();
-
-  @Output()
-  public nodeCheckedOnInit = new EventEmitter<boolean>();
-
-  // public formControl = new FormControl(false);
 
   public hasChildren: boolean = false;
 
@@ -34,18 +32,13 @@ export class TreeNodeComponent implements OnInit {
 
   private localChecked = false;
 
-  constructor(private cd: ChangeDetectorRef, private renderer: Renderer2) {}
+  constructor() {}
 
   ngOnInit(): void {
     this.hasChildren = !!this.item.children?.length;
     this.open = !!this.item.defaultOpen;
 
-    // if (this.item.disabled) {
-    //   this.formControl.disable({emitEvent: false});
-    // }
-
     if (this.item.checked) {
-      this.nodeCheckedOnInit.emit(true);
       this.localChecked = true;
     }
   }
@@ -58,14 +51,27 @@ export class TreeNodeComponent implements OnInit {
     this.open = !this.open;
   }
 
-  public onChange(event: Event): void {
-    const eventTarget = event.target as HTMLInputElement;
-    const checkedFromEvent = eventTarget.checked; 
-    console.log(checkedFromEvent, this.localChecked);
+  public onClick(): void {
+    if (this.item.disabled) {
+      return;
+    }
 
-    const valueToEmit = this.item.hasDisabledUncheckedChildren ? !this.localChecked : checkedFromEvent;
+    const valueToEmit = !this.localChecked;
 
-    this.item.checked = valueToEmit;
+    if (!this.item.hasDisabledCheckedChildren && !this.item.hasDisabledUncheckedChildren)  {
+      this.item.checked = valueToEmit;
+    }
+
+    if (this.item.hasDisabledUncheckedChildren) {
+      this.item.checked = false;
+      this.item.indeterminate = valueToEmit;
+    }
+
+    if (this.item.hasDisabledCheckedChildren){
+
+      this.item.checked = valueToEmit;
+      this.item.indeterminate = true;
+    }
 
     if (this.hasChildren) {
       this.item.children = this.getChildrenWithChangedCheck(this.item.children!, valueToEmit);
@@ -73,49 +79,19 @@ export class TreeNodeComponent implements OnInit {
 
     this.nodeCheckedChange.emit(valueToEmit);
 
-    if (this.item.hasDisabledUncheckedChildren) {
-      console.log('from if disabled unchecked');
-      // TODO  разобратьcя почему установка аттрибутов через Renderer2 не работает
-      eventTarget.checked = false;
-      eventTarget.indeterminate = valueToEmit;
-      // this.cd.detectChanges();
-    }
-
-    if (valueToEmit && this.item.hasDisabledCheckedChildren){
-      console.log('from if disabled checked')
-      eventTarget.checked = false;
-      eventTarget.indeterminate = true;
-    }
-
     this.localChecked = valueToEmit;
-
-
-
-
-    // this.formControl.setValue(false, { emitEvent: false});
-    // this.item.indeterminate = true;
-    // this.cd.detectChanges();
-    // console.log({formControl: this.formControl})
-
-    // console.log(event);
-
-    // @ts-ignore
-    // event.target['checked'] = false;
-    // this.cd.detectChanges();
-
   }
 
-  public onChildCheckChange(event: boolean, onInit = false): void {
-    console.log({event, id: this.item.id})
+  public onChildCheckChange(event: boolean): void {
     const childrenChecked = this.item.children?.filter(child => child.checked);
-
-    const emitter = onInit ? this.nodeCheckedOnInit : this.nodeCheckedChange;
     
     if (childrenChecked?.length === this.item.children?.length) {
-      console.log('from checked all children')
+
       this.item.indeterminate = false;
       this.item.checked = true;
-      emitter.emit(event);
+      this.indeterminate = false;
+      this.checked = true;
+      this.nodeCheckedChange.emit(event);
       return;
     }
 
@@ -124,19 +100,19 @@ export class TreeNodeComponent implements OnInit {
     if (!!childrenChecked?.length || !!indeterminateChildren?.length) {
       this.item.indeterminate = true;
       this.item.checked = false;
-      emitter.emit(event);
-
-      if (onInit) {
-        this.cd.detectChanges();
-      }
+      this.indeterminate = true;
+      this.checked = false;
+      this.nodeCheckedChange.emit(event);
       
       return;
     }
 
     this.item.indeterminate = false;
     this.item.checked = false;
+    this.indeterminate = false;
+    this.checked = false;
 
-    emitter.emit(event);
+    this.nodeCheckedChange.emit(event);
   }
 
   private getChildrenWithChangedCheck(children: TreeNode[], value: boolean): TreeNode[] {
