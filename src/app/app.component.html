@@ -1,5 +1,5 @@
 <div class="content">
-  <app-checkbox-tree [items]="treeNodes" (treeLeafsValuesChange)="onLeafsChange($event)"></app-checkbox-tree>
+  <app-checkbox-tree [items]="treeNodes" [emitLeafsValuesOnInit]="true" (treeLeafsValuesChange)="onLeafsChange($event)"></app-checkbox-tree>
 
   <div class="selected-leafs">Selected leafs ids: {{selectedLeafsIds}}</div>
 </div>

@@ -20,6 +20,9 @@ export class CheckboxTreeComponent implements OnInit {
   @Input()
   public pure = false;
 
+  @Input()
+  public emitLeafsValuesOnInit = false;
+
   @Output()
   public treeLeafsValuesChange = new EventEmitter<TreeLeafsValues>();
 
@@ -30,9 +33,17 @@ export class CheckboxTreeComponent implements OnInit {
   ngOnInit(): void {
     this.initTree(this.pure ? this.cloneItems(this.items) : this.items, []);
     this.tree = this.items as TreeNode[];
+
+    if (this.emitLeafsValuesOnInit) {
+      this.emitLeafsValues();
+    }
   }
 
   public onNodeCheckedChange() {
+    this.emitLeafsValues();
+  } 
+
+  private emitLeafsValues() {
     const treeLeafCheckedMap: TreeLeafsValues = {};
 
     this.getLeafValues(this.tree, treeLeafCheckedMap);
